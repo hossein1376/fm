@@ -1,0 +1,17 @@
+version: "3.8"
+
+services:
+  fm:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      DATABASE_URL: "sqlite://./fm.db"
+      JWT_SECRET: "${JWT_SECRET:-your-secret-key}"
+      ENCRYPTION_KEY: "${ENCRYPTION_KEY:-default-32-byte-encryption-key!}"
+      HOST: "0.0.0.0"
+      PORT: "8080"
+      RUST_LOG: "info"
+    volumes:
+      - ./fm.db:/app/fm.db
+    restart: unless-stopped

@@ -1,0 +1,1045 @@
+/* Global design tokens */
+:root {
+    /* Colors */
+    --bg: #f5f7fb;
+    --surface: #ffffff;
+    --muted: #6b7280;
+    --text: #0f172a;
+    --primary: #4f46e5; /* indigo-600 */
+    --primary-600: #4338ca;
+    --primary-400: #818cf8;
+    --accent: #06b6d4; /* cyan-500 */
+    --success: #10b981;
+    --danger: #ef4444;
+    --glass: rgba(255, 255, 255, 0.6);
+
+    /* Input styling tokens (light theme defaults) */
+    --input-bg: var(--surface);
+    --input-border: rgba(15, 23, 42, 0.06);
+    --input-inner-shadow: rgba(15, 23, 42, 0.02);
+    --input-placeholder: color-mix(in srgb, var(--muted) 70%, transparent);
+    --input-focus-shadow: 0 8px 24px rgba(79, 70, 229, 0.1);
+
+    /* Spacing / sizing */
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 32px;
+
+    /* Radii */
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+
+    /* Elevation */
+    --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.05);
+    --shadow-md: 0 6px 18px rgba(15, 23, 42, 0.08);
+    --shadow-lg: 0 20px 40px rgba(2, 6, 23, 0.12);
+
+    /* Typography */
+    --font-sans:
+        -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+        Arial, "Noto Sans", "Liberation Sans", sans-serif;
+    --font-mono:
+        ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
+
+    /* Transition */
+    --trans-fast: 150ms;
+    --trans-medium: 250ms;
+}
+
+/* Dark theme tokens */
+[data-theme="dark"] {
+    --bg: #071027;
+    --surface: #0b1220;
+    --muted: #9aa4b2;
+    --text: #e6eef8;
+    --primary: #7c5cff;
+    --primary-600: #6c4ef5;
+    --primary-400: #a89bff;
+    --accent: #3dd9e6;
+    --success: #34d399;
+    --danger: #f87171;
+    --glass: rgba(255, 255, 255, 0.04);
+
+    /* Input-specific overrides for better contrast in dark mode */
+    /* Use slightly darker field background than surface and stronger border so text reads clearly */
+    --input-bg: #061025; /* darker, distinct from surface */
+    --input-border: rgba(255, 255, 255, 0.12); /* more visible light border */
+    --input-inner-shadow: rgba(0, 0, 0, 0.45);
+    --input-placeholder: rgba(230, 238, 248, 0.7);
+    --input-focus-shadow: 0 12px 36px rgba(124, 78, 245, 0.18); /* stronger focus glow */
+
+    --shadow-sm: 0 1px 2px rgba(2, 6, 23, 0.6);
+    --shadow-md: 0 8px 24px rgba(2, 6, 23, 0.7);
+    --shadow-lg: 0 30px 60px rgba(2, 6, 23, 0.75);
+}
+
+/* Strong input overrides for dark theme (covers native inputs and PrimeVue components)
+   - Force a darker input background than surface so text color (light) is readable
+   - Increase border contrast and placeholder visibility
+   - Override common PrimeVue input classes to avoid inconsistent rendering
+*/
+[data-theme="dark"] input,
+[data-theme="dark"] textarea,
+[data-theme="dark"] select,
+[data-theme="dark"] .p-inputtext,
+[data-theme="dark"] .p-inputtextarea,
+[data-theme="dark"] .p-dropdown,
+[data-theme="dark"] .p-dropdown .p-dropdown-label {
+    background: #061025 !important; /* darker than surface to separate field */
+    border: 1px solid rgba(255, 255, 255, 0.12) !important; /* clear light border */
+    color: var(--text) !important; /* ensure readable, light text */
+    box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.45) !important;
+    -webkit-text-fill-color: var(
+        --text
+    ) !important; /* ensure autofill/text color in Chromium */
+}
+
+/* Make placeholder text readable */
+[data-theme="dark"] input::placeholder,
+[data-theme="dark"] textarea::placeholder,
+[data-theme="dark"] .p-inputtext::placeholder,
+[data-theme="dark"] .p-inputtextarea::placeholder,
+[data-theme="dark"] .p-dropdown .p-dropdown-label {
+    color: rgba(230, 238, 248, 0.7) !important;
+}
+
+/* Focused state: stronger border + glow for keyboard users */
+[data-theme="dark"] input:focus,
+[data-theme="dark"] select:focus,
+[data-theme="dark"] textarea:focus,
+[data-theme="dark"] .p-inputtext:focus,
+[data-theme="dark"] .p-inputtextarea:focus,
+[data-theme="dark"] .p-dropdown:focus,
+[data-theme="dark"] .p-dropdown .p-dropdown-label:focus {
+    outline: none !important;
+    border-color: rgba(124, 92, 255, 0.95) !important;
+    box-shadow: 0 12px 36px rgba(124, 78, 245, 0.18) !important;
+}
+
+/* Ensure disabled/read-only fields remain legible */
+[data-theme="dark"] input[disabled],
+[data-theme="dark"] textarea[disabled],
+[data-theme="dark"] select[disabled],
+[data-theme="dark"] input[readonly],
+[data-theme="dark"] textarea[readonly] {
+    opacity: 0.95 !important;
+    background: #061025 !important;
+    color: rgba(230, 238, 248, 0.8) !important;
+}
+
+/* Optional utility class for extremely high contrast input needs */
+[data-theme="dark"] .high-contrast-input {
+    background: #04101a !important;
+    border: 1px solid rgba(255, 255, 255, 0.16) !important;
+    color: var(--text) !important;
+}
+
+/* Reset / base */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+    height: 100%;
+}
+
+html {
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    margin: 0;
+    font-family: var(--font-sans);
+    background: linear-gradient(
+        180deg,
+        var(--bg),
+        color-mix(in srgb, var(--bg) 90%, var(--surface) 10%)
+    );
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.45;
+}
+
+/* App container */
+#app {
+    width: 100%;
+    min-height: 100vh;
+    padding: var(--space-md);
+}
+
+/* Utility helpers */
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+}
+
+.row {
+    display: flex;
+    gap: var(--space-md);
+}
+
+.col {
+    flex: 1;
+}
+
+/* Headings & text */
+h1,
+h2,
+h3,
+h4 {
+    margin: 0 0 var(--space-sm) 0;
+    font-weight: 600;
+    color: var(--text);
+}
+
+/* Buttons - modern system */
+button {
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    border: none;
+    cursor: pointer;
+    transition:
+        transform var(--trans-fast) ease,
+        box-shadow var(--trans-fast) ease,
+        opacity var(--trans-fast) ease;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    box-shadow: var(--shadow-sm);
+    font-size: 0.95rem;
+}
+
+button:active {
+    transform: translateY(1px);
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Base button styles - prefer using .btn + variant classes */
+.btn {
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid rgba(15, 23, 42, 0.04);
+}
+
+.btn.primary,
+button.primary {
+    background: linear-gradient(
+        180deg,
+        var(--primary) 0%,
+        var(--primary-600) 100%
+    );
+    color: white;
+    box-shadow: 0 6px 18px rgba(79, 70, 229, 0.18);
+}
+
+.btn.secondary,
+button.secondary {
+    background: linear-gradient(
+        180deg,
+        var(--primary-400) 0%,
+        var(--primary-600) 100%
+    );
+    color: white;
+    box-shadow: 0 6px 18px rgba(33, 150, 243, 0.12);
+}
+
+.btn.ghost {
+    background: transparent;
+    color: var(--primary);
+    border: 1px dashed rgba(79, 70, 229, 0.12);
+}
+
+.btn.danger,
+button.danger {
+    background: linear-gradient(
+        180deg,
+        var(--danger) 0%,
+        color-mix(in srgb, var(--danger) 80%, #000 20%) 100%
+    );
+    color: white;
+    box-shadow: 0 6px 18px rgba(239, 68, 68, 0.12);
+}
+
+button.small,
+.btn.small {
+    padding: 6px 10px;
+    font-size: 0.85rem;
+    border-radius: calc(var(--radius-sm) - 2px);
+}
+
+.full-width {
+    width: 100%;
+    display: block;
+}
+
+/* Inputs, selects, textareas */
+input[type="text"],
+input[type="password"],
+input[type="number"],
+input[type="search"],
+select,
+textarea {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 0.95rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--input-border);
+    background: var(--input-bg);
+    color: var(--text);
+    outline: none;
+    transition:
+        box-shadow var(--trans-fast),
+        border-color var(--trans-fast),
+        transform var(--trans-fast);
+    box-shadow: inset 0 -1px 0 var(--input-inner-shadow);
+}
+
+/* Placeholder color uses token so dark/light themes can tune contrast */
+input::placeholder,
+textarea::placeholder {
+    color: var(--input-placeholder);
+}
+
+/* Focus styles tuned for visibility in both themes */
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--primary-600);
+    box-shadow: var(--input-focus-shadow);
+    transform: translateY(-1px);
+    outline: none;
+}
+
+/* Improve disabled/readonly contrast and legibility */
+input[disabled],
+textarea[disabled],
+select[disabled],
+input[readonly],
+textarea[readonly] {
+    opacity: 0.95;
+    background: var(--input-bg);
+    color: var(--muted);
+}
+
+/* Small accessibility tweak: increase contrast for inputs in dark mode where needed */
+@media (prefers-color-scheme: dark) {
+    input,
+    textarea,
+    select {
+        -webkit-text-fill-color: var(--text);
+    }
+}
+
+/* Forms */
+.form {
+    display: grid;
+    gap: var(--space-md);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.form-group label {
+    font-size: 0.88rem;
+    color: var(--muted);
+    font-weight: 500;
+}
+
+/* Cards */
+.card {
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    padding: var(--space-md);
+    border: 1px solid rgba(15, 23, 42, 0.03);
+    transition:
+        transform var(--trans-medium),
+        box-shadow var(--trans-medium);
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Special small card list (hosts, files) */
+.list-card {
+    padding: 0;
+    overflow: hidden;
+}
+
+/* File / host items */
+.item {
+    display: flex;
+    gap: var(--space-md);
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.03);
+    transition: background var(--trans-fast);
+}
+
+.item:last-child {
+    border-bottom: none;
+}
+
+.item:hover {
+    background: color-mix(in srgb, var(--primary-400) 6%, transparent);
+}
+
+.item .meta {
+    flex: 1;
+}
+
+/* Breadcrumbs */
+.breadcrumb {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    font-size: 0.95rem;
+    color: var(--muted);
+}
+
+.breadcrumb .crumb {
+    color: var(--primary);
+    cursor: pointer;
+}
+
+.breadcrumb .crumb:hover {
+    text-decoration: underline;
+}
+
+/* Header */
+.header {
+    background: transparent;
+    padding: 14px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+}
+
+/* Sidebar */
+.sidebar {
+    width: 280px;
+    min-width: 220px;
+    background: linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--surface) 90%, var(--bg) 10%),
+        var(--surface)
+    );
+    border-radius: var(--radius-md);
+    padding: var(--space-sm);
+    border: 1px solid rgba(15, 23, 42, 0.04);
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Empty / placeholder states */
+.empty-state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 320px;
+    color: var(--muted);
+    background: linear-gradient(
+        180deg,
+        transparent,
+        color-mix(in srgb, var(--surface) 95%, var(--bg) 5%)
+    );
+    border-radius: var(--radius-sm);
+}
+
+/* Modal styles - modern centered */
+.modal {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(
+        180deg,
+        rgba(2, 6, 23, 0.45),
+        rgba(2, 6, 23, 0.5)
+    );
+    z-index: 1200;
+    padding: var(--space-md);
+    animation: modal-fade-in var(--trans-medium) ease;
+}
+
+@keyframes modal-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-content {
+    width: 100%;
+    max-width: 640px;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    border-radius: var(--radius-lg);
+    padding: calc(var(--space-lg) - 4px);
+    background: linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--surface) 98%, var(--bg) 2%),
+        var(--surface)
+    );
+    box-shadow: var(--shadow-lg);
+    border: 1px solid rgba(15, 23, 42, 0.05);
+}
+
+/* Modal header and actions */
+.modal-content h2 {
+    margin-bottom: var(--space-sm);
+}
+
+.modal-actions {
+    display: flex;
+    gap: var(--space-sm);
+    justify-content: flex-end;
+    margin-top: var(--space-md);
+}
+
+/* Global dialog styling (PrimeVue portal dialogs and local fallback) */
+/* Ensure dialogs inherit the app theme variables (surface/text/danger) */
+.p-dialog,
+.p-dialog .p-dialog-content,
+.p-dialog .p-dialog-header,
+.p-dialog .p-dialog-titlebar,
+.fallback-dialog {
+    background: var(--surface, #fff);
+    color: var(--text, #000);
+}
+
+/* Dark-mode variants: support common toggles (data-theme="dark" and .dark) */
+[data-theme="dark"] .p-dialog,
+.dark .p-dialog,
+[data-theme="dark"] .fallback-dialog,
+.dark .fallback-dialog {
+    background: var(--surface, #0b1220);
+    color: var(--text, #fff);
+}
+
+/* Make titlebar close icons / primevue close affordance use danger color */
+.p-dialog .p-dialog-titlebar .p-dialog-titlebar-icon,
+.p-dialog .p-dialog-titlebar-close {
+    color: var(--danger, #dc2626);
+}
+
+/* Ensure small dialogs rendered into the portal don't collapse:
+   - Give .dialog-small a sensible min-width and responsive cap
+   - Allow the dialog title to truncate with an ellipsis so the header buttons
+     (close) don't push or shrink the dialog content.
+   These rules target both nested and portal-mounted PrimeVue dialogs. */
+body > .p-dialog.dialog-small,
+.p-dialog.dialog-small {
+    min-width: 320px; /* prevent overly small / collapsed modal */
+    max-width: min(92vw, 540px); /* responsive cap for small screens */
+    width: auto !important; /* allow CSS to size the dialog while respecting min-width */
+}
+
+body > .p-dialog.dialog-small .p-dialog-content,
+.p-dialog.dialog-small .p-dialog-content {
+    min-width: 320px;
+    padding: 18px !important;
+}
+
+/* Truncate title inside the dialog header to avoid forcing dialog shrinkage.
+   Our header slot renders a `.dialog-title` element — ensure portal-rendered title truncates. */
+body > .p-dialog .dialog-title,
+.p-dialog .dialog-title {
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: calc(
+        100% - 56px
+    ); /* reserve space for the close control (approx. 40-56px) */
+}
+
+/* Also support variants where the title is inside .p-dialog-titlebar > .p-dialog-title */
+body > .p-dialog .p-dialog-title,
+.p-dialog .p-dialog-title {
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: calc(100% - 56px);
+}
+
+/* Close button in modal-actions and common button classes
+   — force a fully opaque filled red appearance to avoid translucency issues */
+.close-btn-red,
+.p-button.close-btn-red,
+.btn.close-btn-red {
+    /* solid filled danger background */
+    background-image: none !important;
+    background-color: var(--danger, #dc2626) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(0, 0, 0, 0.12) !important;
+    box-shadow: 0 6px 18px rgba(239, 68, 68, 0.18) !important;
+
+    /* make absolutely sure nothing blends or filters it */
+    opacity: 1 !important;
+    mix-blend-mode: normal !important;
+    filter: none !important;
+    -webkit-filter: none !important;
+    background-clip: padding-box !important;
+    isolation: isolate !important;
+    z-index: 1201 !important;
+}
+
+/* Hover / focus highlight for the red close action — keep fully opaque */
+.close-btn-red:hover,
+.p-button.close-btn-red:hover,
+.btn.close-btn-red:hover,
+.close-btn-red:focus {
+    background-image: none !important;
+    background-color: color-mix(
+        in srgb,
+        var(--danger, #dc2626) 85%,
+        #000 15%
+    ) !important;
+    color: #ffffff !important;
+    opacity: 1 !important;
+    box-shadow: 0 8px 22px rgba(239, 68, 68, 0.22) !important;
+}
+
+/* Ensure dialog internals inherit text color from the dialog surface */
+.p-dialog *,
+.fallback-dialog * {
+    color: inherit;
+}
+
+/* Small utility classes */
+.kv {
+    display: flex;
+    gap: var(--space-sm);
+    align-items: center;
+}
+
+.tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--primary-400) 8%, transparent);
+    color: var(--primary-600);
+    font-weight: 600;
+    font-size: 0.8rem;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .sidebar {
+        width: 100%;
+        min-width: unset;
+        border-radius: var(--radius-md);
+    }
+
+    .row {
+        flex-direction: column;
+    }
+
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* Legacy / compatibility classes used in templates */
+button.primary {
+    /* kept for compatibility */
+    background: linear-gradient(
+        180deg,
+        var(--primary) 0%,
+        var(--primary-600) 100%
+    );
+    color: white;
+}
+
+button.secondary {
+    background: linear-gradient(
+        180deg,
+        var(--primary-400) 0%,
+        var(--primary-600) 100%
+    );
+    color: white;
+}
+
+button.danger {
+    background: linear-gradient(
+        180deg,
+        var(--danger) 0%,
+        color-mix(in srgb, var(--danger) 80%, #000 20%) 100%
+    );
+    color: white;
+}
+
+button.small {
+    padding: 6px 10px;
+    font-size: 0.85rem;
+}
+
+.error {
+    color: var(--danger);
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* File/folder icons consistent sizing */
+.file-icon {
+    font-size: 20px;
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--primary-400) 8%, transparent);
+}
+
+/* Small accessibility improvements */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Ensure close icon in info dialog header is visible */
+.info-dialog .p-button svg {
+    width: 16px !important;
+    height: 16px !important;
+}
+
+/* HIGH-SPECIFICITY FORCED RED FILLED CLOSE BUTTON
+   This block is appended to ensure the dialog close button appears
+   as a filled red action even when PrimeVue or other libraries have
+   stronger styles that would otherwise override our rules.
+*/
+html body #app .info-dialog .p-button.close-btn-red.filled,
+html body #app .info-dialog .close-btn-red.filled,
+html body #app .p-dialog .p-button.close-btn-red.filled,
+html body #app .p-dialog .p-dialog-titlebar-close .p-button,
+html body #app .p-dialog .p-dialog-titlebar-close,
+html body #app .fallback-dialog .p-button.close-btn-red.filled,
+html body #app .fallback-dialog .close-btn-red.filled {
+    /* filled red appearance */
+    background: linear-gradient(
+        180deg,
+        var(--danger, #dc2626) 0%,
+        color-mix(in srgb, var(--danger, #dc2626) 80%, #000 20%) 100%
+    ) !important;
+    color: #ffffff !important;
+    border: 1px solid transparent !important;
+    box-shadow: 0 6px 18px rgba(239, 68, 68, 0.18) !important;
+    -webkit-text-fill-color: #fff !important;
+    fill: #fff !important;
+}
+
+/* Ensure any label/text inside the button is white */
+html body #app .info-dialog .p-button.close-btn-red.filled .p-button-label,
+html body #app .p-dialog .p-button.close-btn-red.filled .p-button-label,
+html body #app .fallback-dialog .p-button.close-btn-red.filled .p-button-label,
+html body #app .info-dialog .close-btn-red.filled span,
+html body #app .p-dialog .close-btn-red.filled span,
+html body #app .fallback-dialog .close-btn-red.filled span {
+    color: #ffffff !important;
+}
+
+/* Extra defensive selector for Titlebar close controls rendered by PrimeVue */
+html body #app .p-dialog .p-dialog-titlebar .p-dialog-titlebar-close,
+html
+    body
+    #app
+    .p-dialog
+    .p-dialog-titlebar
+    .p-dialog-titlebar-close
+    > .p-button,
+html body #app .p-dialog .p-dialog-titlebar .p-dialog-titlebar-close > button {
+    background: linear-gradient(
+        180deg,
+        var(--danger, #dc2626) 0%,
+        color-mix(in srgb, var(--danger, #dc2626) 80%, #000 20%) 100%
+    ) !important;
+    color: #fff !important;
+    border: 1px solid transparent !important;
+    box-shadow: 0 6px 18px rgba(239, 68, 68, 0.18) !important;
+}
+
+/* Hover/focus states */
+html body #app .info-dialog .p-button.close-btn-red.filled:hover,
+html body #app .p-dialog .p-button.close-btn-red.filled:hover,
+html body #app .fallback-dialog .p-button.close-btn-red.filled:hover,
+html body #app .info-dialog .close-btn-red.filled:hover {
+    background: linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--danger, #dc2626) 85%, #000 15%) 0%,
+        color-mix(in srgb, var(--danger, #dc2626) 70%, #000 30%) 100%
+    ) !important;
+    color: #fff !important;
+}
+
+/* Ensure keyboard focus ring remains visible but consistent with danger color */
+html body #app .info-dialog .p-button.close-btn-red.filled:focus,
+html body #app .p-dialog .p-button.close-btn-red.filled:focus,
+html body #app .fallback-dialog .p-button.close-btn-red.filled:focus {
+    outline: 3px solid
+        color-mix(in srgb, var(--danger, #dc2626) 16%, transparent) !important;
+    outline-offset: 2px !important;
+}
+
+/* Ensure the close action is fully opaque and its contents (including any icons) are visible */
+.close-btn-red,
+.close-btn-red * {
+    opacity: 1 !important;
+    background-color: var(--danger, #dc2626) !important;
+    background-image: none !important;
+    mix-blend-mode: normal !important;
+    filter: none !important;
+    -webkit-filter: none !important;
+}
+
+/* If an SVG icon is included, ensure it is white and opaque */
+.close-btn-red svg,
+.close-btn-red svg * {
+    fill: #fff !important;
+    stroke: #fff !important;
+    opacity: 1 !important;
+}
+
+/* Defensive: some frameworks set button background via pseudo-elements - hide them */
+.close-btn-red::before,
+.close-btn-red::after {
+    background: none !important;
+    content: none !important;
+}
+
+/* Ensure high z-index so button isn't visually blended with overlay */
+.close-btn-red {
+    z-index: 1201 !important;
+}
+
+/* FINAL OVERRIDE (scoped and subtle):
+   Make any PrimeVue dialog titlebar close control compact, consistent and unobtrusive.
+   This replaces the prior large/filled visual with a small icon-only control that
+   uses the danger color for the icon/stroke but keeps the control visually minimal. */
+
+html body #app .p-dialog .p-dialog-titlebar .p-dialog-titlebar-close,
+html body #app .p-dialog .p-dialog-titlebar .p-dialog-titlebar-close .p-button,
+html body #app .p-dialog .p-dialog-titlebar .p-dialog-titlebar-close > button,
+body > .p-dialog .p-dialog-titlebar .p-dialog-titlebar-close,
+body > .p-dialog .p-dialog-titlebar .p-dialog-titlebar-close .p-button,
+.p-dialog .p-dialog-titlebar .p-dialog-titlebar-close > button,
+.p-dialog .p-dialog-titlebar .p-dialog-titlebar-close,
+.p-dialog .p-dialog-titlebar .p-dialog-titlebar-close .p-button,
+.p-dialog .p-dialog-titlebar .p-dialog-header-icon,
+.p-dialog .p-dialog-titlebar .p-dialog-close,
+.p-dialog [class*="p-dialog-close" i],
+.p-dialog [aria-label*="close" i],
+.p-dialog [title*="close" i] {
+    /* Compact, icon-only appearance */
+    background: transparent !important;
+    color: var(--danger, #dc2626) !important; /* icon color */
+    border: 0 !important;
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    padding: 0 !important;
+    border-radius: 4px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: none !important;
+    opacity: 1 !important;
+    line-height: 1 !important;
+    font-size: 0 !important; /* prevent labels from inflating size */
+
+    /* No blending/filtering so the control is solid and predictable */
+    mix-blend-mode: normal !important;
+    filter: none !important;
+    -webkit-filter: none !important;
+    backdrop-filter: none !important;
+    isolation: isolate !important;
+
+    /* Keep stacking reasonable */
+    position: relative !important;
+    z-index: 1200 !important;
+}
+
+/* PrimeVue p-button internals: ensure icon-only buttons in titlebar are compact */
+.p-dialog .p-dialog-titlebar .p-button,
+body > .p-dialog .p-dialog-titlebar .p-button,
+.p-dialog .p-dialog-titlebar .p-button.p-button,
+.p-dialog .p-dialog-titlebar .p-button.p-button-sm {
+    padding: 0 !important;
+    min-width: 20px !important;
+    width: 20px !important;
+    height: 20px !important;
+    border-radius: 4px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* Ensure icon wrapper and icon scale down (white/stroke uses currentColor) */
+.p-dialog .p-dialog-titlebar .p-button .p-button-icon,
+body > .p-dialog .p-dialog-titlebar .p-button .p-button-icon,
+.p-dialog .p-dialog-titlebar svg,
+body > .p-dialog .p-dialog-titlebar svg,
+.p-dialog [class*="p-dialog-close" i] svg,
+.p-dialog [aria-label*="close" i] svg,
+.p-dialog [title*="close" i] svg {
+    width: 12px !important;
+    height: 12px !important;
+    display: inline-block !important;
+    vertical-align: middle !important;
+    fill: currentColor !important;
+    stroke: currentColor !important;
+}
+
+/* If a label/text is present inside the control, hide it for titlebar variants */
+.p-dialog .p-dialog-titlebar .p-button .p-button-label,
+body > .p-dialog .p-dialog-titlebar .p-button .p-button-label,
+.p-dialog .p-dialog-titlebar .p-dialog-close span,
+.p-dialog [class*="close" i] span {
+    display: none !important;
+}
+
+/* Target PrimeVue button internals to remove any default padding/label size that inflates the control */
+.p-dialog .p-dialog-titlebar .p-button,
+body > .p-dialog .p-dialog-titlebar .p-button,
+.p-dialog .p-dialog-titlebar .p-button.p-button,
+.p-dialog .p-dialog-titlebar .p-button.p-button-sm {
+    padding: 0 !important;
+    min-width: 16px !important;
+    width: 16px !important;
+    height: 16px !important;
+    border-radius: 3px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* Ensure p-button inner icon wrapper doesn't add size */
+.p-dialog .p-dialog-titlebar .p-button .p-button-icon,
+body > .p-dialog .p-dialog-titlebar .p-button .p-button-icon {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 10px !important;
+    height: 10px !important;
+    display: inline-block !important;
+}
+
+/* For icon-only buttons where PrimeVue uses .p-button-icon-only */
+.p-dialog .p-dialog-titlebar .p-button.p-button-icon-only,
+body > .p-dialog .p-dialog-titlebar .p-button.p-button-icon-only {
+    padding: 0 !important;
+    width: 16px !important;
+    height: 16px !important;
+    min-width: 16px !important;
+}
+
+/* Ensure SVG icons inside the close control are scaled down and white */
+.p-dialog .p-dialog-titlebar svg,
+body > .p-dialog .p-dialog-titlebar svg,
+.p-dialog [class*="p-dialog-close" i] svg,
+.p-dialog [aria-label*="close" i] svg,
+.p-dialog [title*="close" i] svg {
+    width: 10px !important;
+    height: 10px !important;
+    fill: #fff !important;
+    stroke: #fff !important;
+    display: inline-block !important;
+    vertical-align: middle !important;
+}
+
+/* Ensure any icon/SVG inside the titlebar close control is white and visible */
+html body #app .p-dialog .p-dialog-titlebar svg,
+body > .p-dialog .p-dialog-titlebar svg,
+.p-dialog .p-dialog-titlebar svg,
+.p-dialog .p-dialog-titlebar .p-dialog-close svg,
+.p-dialog .p-dialog-titlebar .p-dialog-header-icon svg,
+.p-dialog [class*="close" i] svg {
+    fill: #ffffff !important;
+    stroke: #ffffff !important;
+    color: #ffffff !important;
+    opacity: 1 !important;
+}
+
+/* Keep hover/focus as deeper red filled state (avoid flipping to transparent/white backgrounds) */
+html body #app .p-dialog .p-dialog-titlebar .p-dialog-titlebar-close:hover,
+body > .p-dialog .p-dialog-titlebar .p-dialog-titlebar-close:hover,
+.p-dialog .p-dialog-titlebar .p-dialog-titlebar-close:hover,
+.p-dialog .p-dialog-titlebar .p-dialog-header-icon:hover,
+.p-dialog .p-dialog-titlebar .p-dialog-close:hover,
+.p-dialog [class*="close" i]:hover {
+    background-color: color-mix(
+        in srgb,
+        var(--danger, #dc2626) 88%,
+        black 12%
+    ) !important;
+    box-shadow: 0 10px 30px rgba(239, 68, 68, 0.25) !important;
+    color: #fff !important;
+}
+
+/* Focus ring for keyboard users (high-contrast, consistent with danger color) */
+html body #app .p-dialog .p-dialog-titlebar .p-dialog-titlebar-close:focus,
+body > .p-dialog .p-dialog-titlebar .p-dialog-titlebar-close:focus,
+.p-dialog .p-dialog-titlebar .p-dialog-titlebar-close:focus,
+.p-dialog .p-dialog-titlebar .p-dialog-header-icon:focus,
+.p-dialog [class*="close" i]:focus {
+    outline: 3px solid
+        color-mix(in srgb, var(--danger, #dc2626) 18%, transparent) !important;
+    outline-offset: 3px !important;
+}
+
+/* Defensive: if the close control is rendered as a text label inside the titlebar, make the label white */
+html
+    body
+    #app
+    .p-dialog
+    .p-dialog-titlebar
+    .p-dialog-titlebar-close
+    .p-button-label,
+.p-dialog .p-dialog-titlebar .p-dialog-titlebar-close .p-button-label,
+.p-dialog .p-dialog-titlebar .p-dialog-close span,
+.p-dialog [class*="close" i] span {
+    color: #ffffff !important;
+}
