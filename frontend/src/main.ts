@@ -171,7 +171,7 @@ async function bootstrap() {
                         ),
                       ],
                     ),
-                    h("div", {}, slots.default ? slots.default() : null),
+                    h("div", {}, slots.default ? slots.default() : undefined),
                   ],
                 ),
               ],
@@ -181,7 +181,6 @@ async function bootstrap() {
   });
 
   // Attempt to dynamically import PrimeVue and PrimeVue components ------------------------
-  let primeOk = false;
   try {
     // dynamic import PrimeVue base
     const PrimeVueModule = await import("primevue/config");
@@ -193,7 +192,9 @@ async function bootstrap() {
 
     // Try to import CSS for PrimeVue theme/core if available (fail silently)
     try {
+      // @ts-ignore
       await import("primevue/resources/themes/saga-blue/theme.css");
+      // @ts-ignore
       await import("primevue/resources/primevue.min.css");
     } catch {
       // ignore missing css modules
@@ -225,15 +226,12 @@ async function bootstrap() {
 
     if (PDialog) app.component("Dialog", PDialog);
     else app.component("Dialog", FallbackDialog);
-
-    primeOk = true;
-  } catch (err) {
+  } catch {
     // If any of the primevue imports failed, fall back to simple components
     // Register safe fallbacks so templates can still function.
     app.component("Button", FallbackButton);
     app.component("InputText", FallbackInputText);
     app.component("Dialog", FallbackDialog);
-    primeOk = false;
   }
 
   // Try to load local icon components (they may import heroicons); if that fails, register inline fallbacks
@@ -312,7 +310,7 @@ async function bootstrap() {
           },
         }),
       );
-  } catch (err) {
+  } catch {
     // local icon components not available; register simple inline SVG fallbacks
     app.component(
       "IconFile",
@@ -388,7 +386,7 @@ async function bootstrap() {
 
 // Start the bootstrap process but don't block the top-level execution.
 // bootstrap will register components and mount the app.
-bootstrap().catch((err) => {
+bootstrap().catch(() => {
   // If bootstrap fails for some unexpected reason, ensure the app still mounts with fallbacks.
   // Register minimal fallbacks if not already registered.
   try {
