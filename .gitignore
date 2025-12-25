@@ -22,7 +22,7 @@ Thumbs.db
 
 # Database
 *.db
-*.db-wal
+*.db-*
 *.sqlite
 
 # Environment
@@ -31,3 +31,4 @@ Thumbs.db
 
 # Temporary files
 /tmp/
+dist/
