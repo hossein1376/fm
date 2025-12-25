@@ -2,6 +2,8 @@
 
 A modern file manager with a single-binary Rust server (actix-web) serving an embedded Vue 3 SPA.
 
+![Promo Image](assets/image/promo.png)
+
 ## Features
 
 - **User Authentication**: JWT-based authentication system
